@@ -2,12 +2,12 @@ package main
 
 import (
 	"bufio"
+	"flag"
+	"fmt"
 	"log"
-    "flag"
-    "fmt"
 	"os"
 
-    "github.com/jnaulty/dnsbrute-go/dnshelper"
+	"github.com/jnaulty/dnsbrute-go/dnshelper"
 )
 
 var domainType string
@@ -16,12 +16,12 @@ var wordlistType string
 
 func init() {
 	const (
-		defaultDomain = "example.com"
-		usageDomain         = "Domain Name"
+		defaultDomain     = "example.com"
+		usageDomain       = "Domain Name"
 		defaultOutputFile = "/dev/null"
-		usageOutputFile         = "Output file"
-		defaultWordlist = "subdomain-lists/deepmagic.com-top500prefixes.txt"
-		usageWordlist         = "Subdomain wordlist"
+		usageOutputFile   = "Output file"
+		defaultWordlist   = "subdomain-lists/deepmagic.com-top500prefixes.txt"
+		usageWordlist     = "Subdomain wordlist"
 	)
 
 	flag.StringVar(&domainType, "domain", defaultDomain, usageDomain)
@@ -35,21 +35,21 @@ func init() {
 }
 
 func check(e error) {
-    if e != nil {
-        panic(e)
-    }
+	if e != nil {
+		panic(e)
+	}
 }
 
 func querySubdomains(wordlistPath string, domainName string, outputFile string) {
-    file, err := os.Open(wordlistPath)
-    if err != nil {
-        fmt.Println(err)
-    }
+	file, err := os.Open(wordlistPath)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-    defer file.Close()
+	defer file.Close()
 
-    scanner := bufio.NewScanner(file)
-    scanner.Split(bufio.ScanWords)    // use scanwords
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanWords) // use scanwords
 
 	var f *os.File
 	// If the file doesn't exist, create it, or append to the file
@@ -60,50 +60,47 @@ func querySubdomains(wordlistPath string, domainName string, outputFile string) 
 		}
 	}
 
-    for scanner.Scan() {
+	for scanner.Scan() {
 		var subdomain string = scanner.Text()
-		fqdn := subdomain+"."+domainName
+		fqdn := subdomain + "." + domainName
 		cname, cnameErr := dnshelper.LookupCNAME(fqdn)
 		ip, ipErr := dnshelper.LookupIP(fqdn)
 
-
-		if (cnameErr == nil && ipErr == nil) {
+		if cnameErr == nil && ipErr == nil {
 			if outputFile != "/dev/null" {
-				_, err := f.WriteString(subdomain+", "+cname+", "+ip+"\n")
+				_, err := f.WriteString(subdomain + ", " + cname + ", " + ip + "\n")
 				check(err)
 				f.Sync()
 			}
-			fmt.Print(subdomain+", ")
-			fmt.Print(cname+", ")
-			fmt.Print(ip+"\n")
+			fmt.Print(subdomain + ", ")
+			fmt.Print(cname + ", ")
+			fmt.Print(ip + "\n")
 		}
 
-    }
+	}
 
 	if outputFile != "/dev/null" {
 		if err := f.Close(); err != nil {
 			log.Fatal(err)
 		}
 	}
-    if err := scanner.Err(); err != nil {
-        fmt.Println(err)
-    }
+	if err := scanner.Err(); err != nil {
+		fmt.Println(err)
+	}
 }
 
 func main() {
 	// basic dnsbrute functionality
-    // print subdomain, cname, ip
+	// print subdomain, cname, ip
 
 	flag.Parse()
-    // args are
-    // -w for wordlist
-    // -d for domain
-    // -o for output
+	// args are
+	// -w for wordlist
+	// -d for domain
+	// -o for output
 
-    fmt.Println("Welcome to DNSBrute")
-    fmt.Println("")
+	fmt.Println("Welcome to DNSBrute")
+	fmt.Println("")
 	querySubdomains(wordlistType, domainType, outputFileType)
-
-
 
 }

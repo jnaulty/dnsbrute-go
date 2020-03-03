@@ -43,8 +43,19 @@ Or, if using docker:
 - [Golang DNS Lookup Blog Post](http://networkbit.ch/golang-dns-lookup/)
 - [Go By Example: Writing Files](https://gobyexample.com/writing-files)
 
-The difference between the container sizes of my project and `interhack86`'s is also one of the reasons I chose to
-rewrite this in go.
+### Why write another tool?
+
+I wanted to write something simple, and I used the python version of `dnsbrute` for a project. I realized this would be
+pretty straightforward to code, just loop through the subdomains, run the queries, and save the results.
+
+After taking a look at github, I see that there are a few other resources I should take a look at:
+- [Q2h1Cg/dnsbrute](https://github.com/Q2h1Cg/dnsbrute)
+- [DNS Library with Amazing Docs](https://github.com/miekg/dns/blob/418631f446c1e9f995f3a9a462a85f4c3cd9d811/doc.go)
+
+I want to emulate what the user Q2h1Cg does and use goroutines for the queries to speed things up.
+
+Once nice thing about this current implementation, is that the docker image size is a magnitude smaller in size than the
+python project I was previously using.
 
 ```
 ➜  dnsbrute-go git:(master) ✗ docker images --no-trunc | grep dnsbrute
