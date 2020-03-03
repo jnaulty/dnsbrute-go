@@ -16,11 +16,11 @@ var wordlistType string
 
 func init() {
 	const (
-		defaultDomain = "pocket.com"
+		defaultDomain = "example.com"
 		usageDomain         = "Domain Name"
 		defaultOutputFile = "/dev/null"
 		usageOutputFile         = "Output file"
-		defaultWordlist = "subdomain-list.txt"
+		defaultWordlist = "subdomain-lists/deepmagic.com-top500prefixes.txt"
 		usageWordlist         = "Subdomain wordlist"
 	)
 

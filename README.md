@@ -13,6 +13,23 @@ To build the Docker image:
 
 ## Run
 
+```
+➜  dnsbrute-go git:(master) ✗ ./dnsbrute-go -h
+Usage of ./dnsbrute-go:
+  -d string
+        Domain Name (shorthand) (default "example.com")
+  -domain string
+        Domain Name (default "example.com")
+  -o string
+        Output file (shorthand) (default "/dev/null")
+  -outputFile string
+        Output file (default "/dev/null")
+  -w string
+        Subdomain wordlist (shorthand) (default "subdomain-lists/deepmagic.com-top500prefixes.txt")
+  -wordlist string
+        Subdomain wordlist (default "subdomain-lists/deepmagic.com-top500prefixes.txt")
+```
+
 `./dnsbrute-go -d surfline.com -w subdomain-lists/subdomains-top1mil-110000.txt -o something.txt`
 
 Or, if using docker:
